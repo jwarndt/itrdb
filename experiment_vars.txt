@@ -1,0 +1,129 @@
+Variables for site characterization:
+Jacob Arndt
+8/25/2018
+
+------- Digital Elevation Model Derived -------
+1. Elevation
+	a. single cell
+	b. 3x3 neighborhood
+		variance
+		mean
+		range
+	c. 15x15 neighborhood
+		variance
+		mean
+		range
+2. Closest Peak(s)
+	a. number of contributing peaks
+	a. distance to each of the peaks
+	b. elevation difference to each of the peaks
+	d. distance to max peak
+	e. elevation difference to max peak
+3. Slope
+	a. single cell
+	b. 3x3 neighborhood
+		histogram
+		mean
+		variance
+	c. 15x15 neighborhood
+		histogram
+		mean
+		variance
+4. Aspect 
+	(for neighborhoods, bin the aspects to a set of defined orientations)
+	a. single cell
+	b. 3x3 neighborhood
+		histogram
+		mean
+		variance
+		number of different aspects
+	c. 15x15 neighborhood
+		histogram
+		mean
+		variance
+		number of different aspects
+------------- Soils Derived ------------------
+
+USA Soils Map Units (https://www.arcgis.com/home/item.html?id=c2b408ba5c0a4fe1a79377906935c1a4)
+
+1. USA Soils Erosion Class (https://www.arcgis.com/home/item.html?id=cf102251aac548f9a751968f3fa0c1da)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
+2. USA Soils Runoff (https://www.arcgis.com/home/item.html?id=e6a953daaffb454eadad956db67ae384)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
+3. USA Soils Water Table Depth (https://www.arcgis.com/home/item.html?id=5e6942b46bc24b2e959305b5f9d30a81)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
+4. USA Soils Drainage Class (https://www.arcgis.com/home/item.html?id=55d0c2d32c234ce497cd30dc9bc06729)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
+5. USA Soils Hydrologic Group (https://www.arcgis.com/home/item.html?id=be2124509b064754875b8f0d6176cc4c)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
+6. USA Soils Hydric Class (https://www.arcgis.com/home/item.html?id=2be45af986af4624839cedae883faf47)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
+7. USA Soils Erodibility Factor (https://www.arcgis.com/home/item.html?id=ac1bc7c30bd4455e85f01fc51055e586)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
+8. USA Soils Bedrock Depth (https://www.arcgis.com/home/item.html?id=4accc1aaa6164b47a63750626d6ab5e2)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
+9. USA Soils Albedo (https://www.arcgis.com/home/item.html?id=c6c887a88977428f93567d21e518c5e1)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
+------------ Miscellaneous Ecological info --------------
+1. Ecological Landform Class (https://www.arcgis.com/home/item.html?id=cd817a746aa7437cbd72a6d39cdb4559)
+	a. single cell
+	b. 3x3 neighborhood
+		majority
+		histogram
+	c. 15x15 neighborhood
+		majority
+		histogram
