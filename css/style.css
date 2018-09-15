@@ -79,3 +79,13 @@
     margin:10px;
     width:250px;
 }
+
+.plotButton {
+    float:right;
+    position:relative;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-width: 2px;
+    background-clip: padding-box;
+    color: rgba(100,100,100,1);
+    font-size:12px;
+}

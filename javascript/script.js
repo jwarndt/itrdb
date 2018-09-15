@@ -317,9 +317,9 @@ function updateBuffer() {
       var html = "<div class=popupHeader>\
                   <h6>" + feature.properties.sitename + "</h6> (" + feature.properties.lat + ", " + feature.properties.lon + ")<br>\
                   <hr class='my-6' style='margin-bottom:0px'>\
-                  <button title='data overview' type='button' class='btn btn-light popupButton' id='dataOverview'>\
+                  <button title='chronology overview' type='button' class='btn btn-light popupButton' id='dataOverview'>\
                   <img src='./glyph-iconset-master/svg/si-glyph-bullet-list-2.svg'></button>\
-                  <button title='advanced data information' type='button' class='btn btn-light popupButton' id='dataAdvanced'>\
+                  <button title='more information' type='button' class='btn btn-light popupButton' id='dataAdvanced'>\
                   <img src='./glyph-iconset-master/svg/si-glyph-chart-decrease.svg'></button>\
                   </div>"
       return html
@@ -327,6 +327,13 @@ function updateBuffer() {
 
     function buildOverviewContent(feature) {
       var content = "<div class=popupContent>\
+                    <div>\
+                      <h6>Study Information</h6>\
+                      <b>Site name:</b> " + feature.properties.sitename + "<br>\
+                      <b>Investigators:</b> " + feature.properties.invstgtrs + "<br>\
+                      <b>Study code:</b> " + feature.properties.studyCode + "<br>\
+                      <b>Study ID:</b> " + feature.properties.studyID + "<br><br>\
+                    </div>\
                     <div>\
                       <h6>Species Information</h6>\
                       <b>Common name:</b> " + feature.properties.sppCom + "<br>\
@@ -337,21 +344,16 @@ function updateBuffer() {
                       <h6>Data Information</h6>\
                       <b>Innermost ring:</b> " + feature.properties.earliest + "<br>\
                       <b>Outtermost ring:</b> " + feature.properties.mostRecent + "<br>\
+                      <b>Series intercorrelation:</b> " + feature.properties.earliest + "<br>\
+                      <b>Percent problem segments:</b> " + feature.properties.earliest + "<br>\
+                      <b>Number of dated series:</b> " + feature.properties.earliest + "<br>\
+                      <b>Average autocorrelation:</b> " + feature.properties.earliest + "<br>\
+                      <b>Average standard deviation:</b> " + feature.properties.earliest + "<br>\
+                      <b>Average mean sensitivity:</b> " + feature.properties.earliest + "<br><br>\
+                    </div>\
+                    <div>\
+                      <a href='"+ feature.properties.noaaPage +"' target='_blank'>NOAA study page</a><br>\
                       <a href='"+ feature.properties.filename + "' target='_blank'>NOAA JSON metadata</a><br><br>\
-                    </div>\
-                    <div>\
-                      <h6>Study Information</h6>\
-                      <b>Site name:</b> " + feature.properties.sitename + "<br>\
-                      <b>Investigators:</b> " + feature.properties.invstgtrs + "<br>\
-                      <b>Study code:</b> " + feature.properties.studyCode + "<br>\
-                      <b>Study ID:</b> " + feature.properties.studyID + "<br>\
-                      <a href='"+ feature.properties.noaaPage +"' target='_blank'>NOAA study page</a><br><br>\
-                    </div>\
-                    <div>\
-                      <h6>Terrain</h6>\
-                      <b>Elevation (m):</b><br>\
-                      <b>Slope (percent):</b><br>\
-                      <b>Aspect (0 - 360 degrees):</b><br>\
                     </div>\
                     </div>";
       return content;
@@ -365,10 +367,12 @@ function updateBuffer() {
       var content = "<div class=popupContent>";
       while (fileIdx < 10) {
         if (dataUrl != "" && dataUrl != null && dataUrl != undefined) {
+          var fileBasename = String(dataUrl).substring(dataUrl.lastIndexOf("/") + 1);
           if (feature_props["u_0"+String(fileIdx) + "_desc"] == "Correlation Stats") {
             content += "<div>\
                           <h6>" + feature_props["u_0"+String(fileIdx) + "_desc"] + "</h6>\
-                          <a href=" + dataUrl + " target='_blank'>data file</a><br>\
+                          <button type='button' class='btn btn-light' id='plot' style='float:right;position:relative;bottom:15px;border-color: rgba(0, 0, 0, 0.2);border-width: 2px;background-clip:padding-box;color:rgba(100,100,100,1);font-size:12px'>Plot</button>\
+                          <a href=" + dataUrl + " target='_blank'>"+fileBasename+"</a><br>\
                         </div>"
           }
 
@@ -379,7 +383,8 @@ function updateBuffer() {
               if (varDesc == null || varDesc == "" || varDesc == undefined) {
                 content += "<div>\
                               <h6>" + feature_props["u_0"+String(fileIdx) + "_desc"] + "</h6>\
-                              <a href=" + dataUrl + " target='_blank'>data file</a><br>\
+                              <button type='button' class='btn btn-light plotButton' id='plot'>Plot</button>\
+                              <a href=" + dataUrl + " target='_blank'>"+fileBasename+"</a><br>\
                               <b>Units:</b> " + feature_props["v_0"+String(fileIdx)+"_0"+String(varIdx)+"_un"] +"<br>\
                             </div>"
                 varIdx+=3
@@ -391,7 +396,8 @@ function updateBuffer() {
                 else {
                   content += "<div>\
                                 <h6>"+varDesc+"</h6>\
-                                <a href=" + dataUrl + " target='_blank'>data file</a><br>";
+                                <button type='button' class='btn btn-light plotButton' id='plot'>Plot</button>\
+                                <a href=" + dataUrl + " target='_blank'>"+fileBasename+"</a><br>";
                   
                   // handle method if needed
                   if (feature_props["v_0"+String(fileIdx)+"_0"+String(varIdx)+"_me"] == undefined || feature_props["v_0"+String(fileIdx)+"_0"+String(varIdx)+"_me"] == null || feature_props["v_0"+String(fileIdx)+"_0"+String(varIdx)+"_me"] == "") {
@@ -421,6 +427,8 @@ function updateBuffer() {
         fileIdx += 1;
         dataUrl = feature_props["u_0"+String(fileIdx)];
       }
+      
+      
       return content
     } // end build data content
     
