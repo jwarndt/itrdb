@@ -28,6 +28,37 @@
     color: rgba(100,100,100,1);
 }
 
+.chart {
+    z-index: 11;
+    background-color: white;
+    position:absolute;
+}
+[draggable=true] {
+    cursor: move;
+}
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1;
+}
+
+.chartDiv {
+    width: 550px;
+    height: 300px;
+    position: absolute;
+    z-index: 9;
+    box-shadow: 0px 0px 20px 0px;
+    background-color: white;
+}
+
+#headBar {
+    padding: 10px;
+    cursor: move;
+    z-index: 10;
+    background-color: #2196F3;
+    color: white;
+}
+
 .popupButton:focus, .mapButton:focus {
     background-color: rgba(215,215,215,1) !important;
 }

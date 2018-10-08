@@ -281,6 +281,12 @@ function updateBuffer() {
       $('#dataAdvanced').click(function() {
         buildDataPopup(data.features[0]);
       });
+
+      $(".plotButton").on("click", function() {
+        var fileID = $(this).next().text();
+        console.log("plot button clicked: " + fileID);
+      });
+
     }
 
     function buildOverviewPopup(feature) {
@@ -310,6 +316,47 @@ function updateBuffer() {
 
       $('#dataAdvanced').click(function() {
         buildDataPopup(feature);
+      });
+
+      $(".plotButton").on("click", function() {
+        var fileID = $(this).next().text();
+        console.log("plot button clicked: " + fileID);
+        if (fileID.slice(-3) == "crn") { // chronology
+          jsonData = $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/geoserver/www/itrdb_crn_data.json",
+            contentType: "application/json",
+            async: false,
+            datatype: "json",
+            success: function(data) {
+              buildPlot(data[fileID], "crn");
+            }
+          });
+        }
+        else if (fileID.slice(-3) == "rwl") { //ring width
+          jsonData = $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/geoserver/www/itrdb_rwl_data.json",
+            dataType: "json",
+            async: false,
+            contentType: "application/json",
+            success: function(data) {
+              buildPlot(data[fileID], "rwl");
+            }
+          });
+        }
+        else { // correlation stats
+          jsonData = $.ajax({
+            type: "GET",
+            url: "http:/localhost:8080/geoserver/www/itrdb_corr_data.json",
+            dataType: "json",
+            async: false,
+            contentType: "application/json",
+            success: function(data) {
+              buildPlot(data[fileID], "corr");
+            }
+          });
+        }
       });
     }
 
@@ -371,7 +418,7 @@ function updateBuffer() {
           if (feature_props["u_0"+String(fileIdx) + "_desc"] == "Correlation Stats") {
             content += "<div>\
                           <h6>" + feature_props["u_0"+String(fileIdx) + "_desc"] + "</h6>\
-                          <button type='button' class='btn btn-light' id='plot' style='float:right;position:relative;bottom:15px;border-color: rgba(0, 0, 0, 0.2);border-width: 2px;background-clip:padding-box;color:rgba(100,100,100,1);font-size:12px'>Plot</button>\
+                          <button type='button' class='btn btn-light' style='float:right;position:relative;bottom:15px;border-color: rgba(0, 0, 0, 0.2);border-width: 2px;background-clip:padding-box;color:rgba(100,100,100,1);font-size:12px'>Plot</button>\
                           <a href=" + dataUrl + " target='_blank'>"+fileBasename+"</a><br>\
                         </div>"
           }
@@ -383,7 +430,7 @@ function updateBuffer() {
               if (varDesc == null || varDesc == "" || varDesc == undefined) {
                 content += "<div>\
                               <h6>" + feature_props["u_0"+String(fileIdx) + "_desc"] + "</h6>\
-                              <button type='button' class='btn btn-light plotButton' id='plot'>Plot</button>\
+                              <button type='button' class='btn btn-light plotButton'>Plot</button>\
                               <a href=" + dataUrl + " target='_blank'>"+fileBasename+"</a><br>\
                               <b>Units:</b> " + feature_props["v_0"+String(fileIdx)+"_0"+String(varIdx)+"_un"] +"<br>\
                             </div>"
@@ -396,7 +443,7 @@ function updateBuffer() {
                 else {
                   content += "<div>\
                                 <h6>"+varDesc+"</h6>\
-                                <button type='button' class='btn btn-light plotButton' id='plot'>Plot</button>\
+                                <button type='button' class='btn btn-light plotButton'>Plot</button>\
                                 <a href=" + dataUrl + " target='_blank'>"+fileBasename+"</a><br>";
                   
                   // handle method if needed
@@ -428,9 +475,57 @@ function updateBuffer() {
         dataUrl = feature_props["u_0"+String(fileIdx)];
       }
       
-      
       return content
     } // end build data content
+
+    function buildPlot(json_data, plotType) {
+      console.log("building plot " + plotType);
+      var chronName = json_data[0][0];
+      var y = json_data[0].slice(1);
+      var parseTime = d3.timeParse("%Y");
+      var x = [];
+      var data = [];
+      dateVal = json_data[2][0];
+      for (var n = 0; n < y.length; n++) {
+        data.push({value:+y[n], year:parseTime(dateVal)});
+        x.push(parseTime(dateVal));
+        dateVal = dateVal+1;
+      }
+
+      var margin = {top: 20, right: 20, bottom: 30, left: 50};
+      var width = 500 - margin.left - margin.right;
+      var height = 250 - margin.top - margin.bottom;
+      
+      var y_axis = d3.scaleLinear()
+          .range([height, 0])
+          .domain([Math.min(...y), Math.max(...y)]);
+      var x_axis = d3.scaleTime()
+          .range([0, width])
+          .domain(d3.extent(data, function(d) {return d.year}));
+      var valueLine = d3.line()
+          .x(function(d) {return x_axis(d.year);})
+          .y(function(d) { return y_axis(d.value);});
+      $(".cont").append("<div id='draggable' class='chartDiv ui-widget-content'><div id='headBar'></div></div>");
+      var svg = d3.select("#draggable").append("svg")
+          .attr("class", "chart")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+      svg.append("path")
+           .attr("class", "line")
+           .attr("d", valueLine(data));
+      svg.append("g")
+           .attr("transform", "translate(0,"+ height + ")")
+           .call(d3.axisBottom(x_axis)
+                   .tickFormat(d3.timeFormat("%Y")));
+      svg.append("g")
+           .call(d3.axisLeft(y_axis));
+
+      $( function() {
+      $( "#draggable" ).draggable();
+    } );
+    }
     
     /*#############################################################################################
     #                              main query button (click)                                      #
