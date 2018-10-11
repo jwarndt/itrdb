@@ -505,13 +505,30 @@ function updateBuffer() {
       var valueLine = d3.line()
           .x(function(d) {return x_axis(d.year);})
           .y(function(d) { return y_axis(d.value);});
-      $(".cont").append("<div id='draggable' class='chartDiv ui-widget-content'><div id='headBar'></div></div>");
-      var svg = d3.select("#draggable").append("svg")
-          .attr("class", "chart")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
+      if ($("#d").length) {
+        console.log('adding a tab in the plot window');
+        $(".nav-link").removeClass('active');
+        $(".chart").removeClass('show');
+        $(".chart").removeClass('active');
+        $(".nav-link").attr('aria-selected', "false");
+        $("#plotTabBar").append("<a class='nav-link active' data-toggle='tab' role='tab' aria-selected='true' aria-controls='" + json_data[0][0] + "' id='" + json_data[0][0] + "Tab' href='#" + json_data[0][0] + "'>" + json_data[0][0] + "</a>");
+      }
+      else {
+        $(".cont").append("<div id='d' class='chartDiv tab-content'><div id='headBar'><button type='button' class='close' aria-label='Close' id='plotClose'><span aria-hidden='true'>&times;</span></button></div></div>");
+        $("#headBar").append("<nav id='plotTabBar' class='nav'><a class='nav-link active' data-toggle='tab' role='tab' aria-selected='true' aria-controls='" + json_data[0][0] + "' id='" + json_data[0][0] + "Tab' href='#" + json_data[0][0] + "'>" + json_data[0][0] + "</a></nav>")
+        $(".chartDiv").draggable().resizable({aspectRatio: true});
+      }
+      var svg = d3.select("#d").append("svg")
+          .attr("class", "chart tab-pane show active")
+          .attr("id", json_data[0][0])
+          .attr("aria-labeledby", json_data[0][0]+"Tab")
+          .attr("preserveAspectRatio", "xMinYMin meet")
+          .attr("viewBox", "0 0 550 300")
+          .classed("svg-content", true)
           .append("g")
           .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+          /*.attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)*/
       svg.append("path")
            .attr("class", "line")
            .attr("d", valueLine(data));
@@ -521,10 +538,17 @@ function updateBuffer() {
                    .tickFormat(d3.timeFormat("%Y")));
       svg.append("g")
            .call(d3.axisLeft(y_axis));
+      svg.append("text")
+           .attr("x", ((width + margin.left + margin.right)/2))
+           .attr("y", 0 - (margin.top / 4))
+           .attr("text-anchor", "middle")
+           .style("font-size", "16px")
+           .text(json_data[0][0]);
 
-      $( function() {
-      $( "#draggable" ).draggable();
-    } );
+      $("#plotClose").on("click", function() {
+        console.log("plot window closed");
+        $(".chartDiv").remove();
+      });
     }
     
     /*#############################################################################################

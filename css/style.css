@@ -29,13 +29,11 @@
 }
 
 .chart {
-    z-index: 11;
+    z-index: 2;
     background-color: white;
     position:absolute;
 }
-[draggable=true] {
-    cursor: move;
-}
+
 .line {
     fill: none;
     stroke: steelblue;
@@ -45,17 +43,42 @@
 .chartDiv {
     width: 550px;
     height: 300px;
-    position: absolute;
-    z-index: 9;
+    /*position: absolute;*/
+    /*z-index: 9;*/
     box-shadow: 0px 0px 20px 0px;
     background-color: white;
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.nav-link {
+    color: white;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.nav-link.active, .nav-link:hover{
+    background-color: #2196F3;
+    color: white;
+}
+
+.chart {
+    margin-top:25px;
+}
+
+.svg-content {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 #headBar {
-    padding: 10px;
-    cursor: move;
+    height: 25px;
     z-index: 10;
-    background-color: #2196F3;
+    background-color: #1e7fcf;
     color: white;
 }
 
@@ -120,3 +143,8 @@
     color: rgba(100,100,100,1);
     font-size:12px;
 }
+
+#plotClose {
+    color: black;
+}
+
