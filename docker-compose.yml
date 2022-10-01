@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  
+  db:
+    build: db
+
+  backend:
+    build: itrdb/backend
+    depends_on:
+      - db
