@@ -1,11 +1,40 @@
-version: '3.9'
+version: '3.3'
+
+volumes:
+  pgvolume:
 
 services:
-  
-  db:
-    build: db
-
   backend:
-    build: itrdb/backend
+    build: ./itrdb/backend
+    environment:
+      - DATABASE_DB=itrdbdb
+      - DATABASE_USER=itrdbadmin
+      - DATABASE_PW=itrdbadmin
+      - DATABASE_HOST=itrdb-db
+    links:
+      - db:itrdb-db
     depends_on:
       - db
+
+  db:
+    build: db
+    healthcheck:
+      test: ["CMD", "usr/pgsql-13/bin/pg_isready"]
+      interval: 60s
+      timeout: 10s
+      retries: 20
+    environment:
+      - PG_DATABASE=itrdbdb
+      - PG_PRIMARY_USER=itrdbadmin
+      - PG_PRIMARY_PASSWORD=itrdbadmin
+      - PG_MODE=primary
+      - MODE=postgres
+      - PG_USER=itrdbadmin
+      - PG_PASSWORD=itrdbadmin
+      - PG_ROOT_PASSWORD=itrdbadmin
+      - PGDATA_PATH_OVERRIDE=persistent
+      - PGHOST=/tmp
+      - MAX_CONNECTIONS=100
+      - SHARED_BUFFERS=512MB
+      - TIMEZONE=UTC
+      - PG_PRIMARY_PORT=5432

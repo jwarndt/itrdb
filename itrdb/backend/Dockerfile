@@ -1,11 +1,15 @@
 FROM python:3.9.13-slim
+LABEL author="Jacob W. Arndt"
 
 WORKDIR /tmp
 
-COPY requirements .
-COPY app .
+RUN apt-get update && apt-get install build-essential postgresql-client curl libpq-dev gdal-bin libgdal-dev -y
 
-RUN apt-get update && apt-get install -y build-essential libpq libgdal-dev
+COPY scripts scripts
+COPY app app
+COPY requirements.txt /tmp/requirements.txt
 
 RUN pip install --upgrade pip
-RUN pip install requirements.txt
+RUN pip install -r /tmp/requirements.txt
+
+CMD ["sh", "scripts/run_dev.sh"]

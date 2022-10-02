@@ -1,0 +1,23 @@
+version: '3.3'
+
+volumes:
+  pgvolume:
+
+services:
+  db:
+    volumes:
+      - pgvolume:/pgdata
+    ports:
+      - "5021:5432"
+
+  backend:
+    command: sh scripts/run_dev.sh
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - CHOKIDIR_USEPOLLING=true
+      - FAST_REFRESH=false 
+    volumes:
+      - ./itrdb/backend/:/tmp/backend
+    ports:
+      - "8061:9064"
